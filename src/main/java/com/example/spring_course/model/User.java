@@ -1,22 +1,14 @@
 package com.example.spring_course.model;
 
-import lombok.*;
+import lombok.Data;
 
-//@Entity
-//@Table(name = "users")
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class User {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-//    @Column(nullable = false, unique = true)
+    private String username;
     private String email;
-
-//    @Column(nullable = false)
-    private String password;
+    private String firstName;
+    private String lastName;
+    private String city;
+    private String state;
+    private String country;
 }
