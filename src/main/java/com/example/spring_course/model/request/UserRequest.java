@@ -14,6 +14,7 @@ public class UserRequest {
     private String username;
 
     @NotEmpty
+    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")
     private String email;
 
     @NotEmpty
