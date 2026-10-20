@@ -10,5 +10,4 @@ public class User {
     private String lastName;
     private String city;
     private String state;
-    private String country;
 }
