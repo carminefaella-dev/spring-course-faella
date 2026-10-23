@@ -4,8 +4,12 @@ import com.example.spring_course.model.User;
 import com.example.spring_course.model.request.UserRequest;
 import com.example.spring_course.model.response.UserResponse;
 import com.example.spring_course.service.UserService;
+import com.example.spring_course.service.dto.UserRequestDTO;
+import com.example.spring_course.service.dto.UserResponseDTO;
+import com.example.spring_course.service.mapper.UserRequestMapper;
+import com.example.spring_course.service.mapper.UserResponseMapper;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping ("/api/v1")
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final UserRequestMapper reqMapper;
+    private final UserResponseMapper resMapper;
 
     @GetMapping("/getAllUser")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -30,20 +36,33 @@ public class UserController {
     }
 
     @PostMapping("/createUser")
-    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest request) {
-        UserResponse response = userService.createUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequest request) {
+        UserRequestDTO requestDTO = reqMapper.mapRequest(request);
+
+        UserResponse response = userService.createUser(requestDTO);
+
+        UserResponseDTO responseDTO = resMapper.mapResponse(response);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @PutMapping("/updateUser/{email}")
-    public ResponseEntity<User> updateUser(@PathVariable String email, @RequestBody @Valid UserRequest request) {
-        User updatedUser = userService.updateUser(email, request);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable String email, @RequestBody @Valid UserRequest request) {
+        UserRequestDTO requestDTO = reqMapper.mapRequest(request);
+
+        UserResponse response = userService.updateUser(email, requestDTO);
+
+        UserResponseDTO responseDTO = resMapper.mapResponse(response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
     @DeleteMapping("/deleteUser/{email}")
-    public ResponseEntity<UserResponse> deleteUser(@PathVariable String email) {
+    public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable String email) {
         UserResponse response = userService.deleteByEmail(email);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        UserResponseDTO responseDTO = resMapper.mapResponse(response);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 }

@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class UserResponseDTO {
     private String requestId;
-    private String credential;
+    private String fullName;
 }
