@@ -1,4 +1,4 @@
-package com.example.spring_course.model;
+package com.example.spring_course.controller.model;
 
 import lombok.Data;
 
@@ -8,6 +8,5 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
-    private String city;
-    private String state;
+    private String address;
 }

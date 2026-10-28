@@ -1,11 +1,12 @@
 package com.example.spring_course.controller;
 
-import com.example.spring_course.model.User;
-import com.example.spring_course.model.request.UserRequest;
-import com.example.spring_course.model.response.UserResponse;
+import com.example.spring_course.controller.model.request.UserRequest;
 import com.example.spring_course.service.UserService;
+import com.example.spring_course.service.dto.UserRequestDTO;
+import com.example.spring_course.service.dto.UserResponseDTO;
+import com.example.spring_course.service.mapper.UserMapper;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,37 +14,48 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping ("/api/v1")
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
     @GetMapping("/getAllUser")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUser());
     }
 
-    @GetMapping("/getUser/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        User user = userService.findByEmail(email);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+    @GetMapping("/getUserByName/{firstName}")
+    public ResponseEntity<List<UserResponseDTO>> getUserByName(@PathVariable String firstName) {
+        return ResponseEntity.ok(userService.searchByName(firstName));
+    }
+
+    @GetMapping("/getUserByEmail/{email}")
+    public ResponseEntity<List<UserResponseDTO>> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.searchByEmail(email));
     }
 
     @PostMapping("/createUser")
-    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest request) {
-        UserResponse response = userService.createUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequest request) {
+        UserRequestDTO requestDTO = userMapper.mapRequest(request);
+        UserResponseDTO responseDTO = userService.createUser(requestDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @PutMapping("/updateUser/{email}")
-    public ResponseEntity<User> updateUser(@PathVariable String email, @RequestBody @Valid UserRequest request) {
-        User updatedUser = userService.updateUser(email, request);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable String email, @RequestBody @Valid UserRequest request) {
+
+        UserRequestDTO requestDTO = userMapper.mapRequest(request);
+        UserResponseDTO responseDTO = userService.updateUser(email, requestDTO);
+
+        return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/deleteUser/{email}")
-    public ResponseEntity<UserResponse> deleteUser(@PathVariable String email) {
-        UserResponse response = userService.deleteByEmail(email);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable String email) {
+        UserResponseDTO responseDTO = userService.deleteByEmail(email);
+
+        return ResponseEntity.ok(responseDTO);
     }
 }
