@@ -1,4 +1,4 @@
-package com.example.spring_course.model.response;
+package com.example.spring_course.controller.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

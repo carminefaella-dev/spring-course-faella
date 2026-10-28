@@ -1,4 +1,4 @@
-package com.example.spring_course.model.request;
+package com.example.spring_course.controller.model.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
