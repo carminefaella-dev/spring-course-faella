@@ -9,5 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserResponseDTO {
     private String requestId;
-    private String credential;
+    private String email;
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String address;
 }

@@ -10,17 +10,19 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
-    @Mapping(target = "address", source = "address")
+    @Mapping(
+            target = "address",
+            expression = "java(buildAddress(request.getAddress()))"
+    )
     public abstract UserRequestDTO mapRequest(UserRequest request);
 
-    @Mapping(target = "credential", expression = "java(buildCredential(response))")
-    public abstract UserResponseDTO mapResponse(UserResponse response);
+    @Mapping(
+            target = "fullName",
+            expression = "java(dto.getFirstName() + \" \" + dto.getLastName())"
+    )
+    public abstract UserResponse mapResponse(UserResponseDTO dto);
 
     protected String buildAddress(UserAddress address) {
-        if (address == null) {
-            return null;
-        }
-
         return String.format(
                 "%s %s, %s %s (%s), %s",
                 address.getStreetName(),
@@ -29,20 +31,6 @@ public abstract class UserMapper {
                 address.getCity(),
                 address.getProvince(),
                 address.getCountry()
-        );
-    }
-
-    protected String buildCredential(UserResponse response) {
-        if (response == null) {
-            return null;
-        }
-
-        return String.format(
-                "%s|%s|%s|%s",
-                response.getEmail(),
-                response.getUsername(),
-                response.getFirstName(),
-                response.getLastName()
         );
     }
 }
