@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ import java.util.List;
     name = "User Management",
     description = "APIs for managing users, including creation, retrieval, update and deletion operation"
 )
+@Slf4j
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
@@ -64,10 +66,15 @@ public class UserController {
         )
     })
     public ResponseEntity<List<UserResponse>> getAllUsers() {
+        log.info("Received request to retrieve all users");
+
         List<UserResponse> responses = userService.getAllUser()
                 .stream()
                 .map(userMapper::mapResponse)
                 .toList();
+
+        log.info("Successfully retrieved {} users", responses.size());
+
         return ResponseEntity.ok(responses);
     }
 
@@ -112,12 +119,16 @@ public class UserController {
                 )
         )
     })
-    public ResponseEntity<List<UserResponse>> getUserByName(
-            @PathVariable String firstName) {
+    public ResponseEntity<List<UserResponse>> getUserByName(@PathVariable String firstName) {
+        log.info("Received request to search users by first name: {}", firstName);
+
         List<UserResponse> responses = userService.searchByName(firstName)
                 .stream()
                 .map(userMapper::mapResponse)
                 .toList();
+
+        log.info("Found {} users with first name {}", responses.size(), firstName);
+
         return ResponseEntity.ok(responses);
     }
 
@@ -162,12 +173,16 @@ public class UserController {
                 )
         )
     })
-    public ResponseEntity<List<UserResponse>> getUserByEmail(
-            @PathVariable String email) {
+    public ResponseEntity<List<UserResponse>> getUserByEmail(@PathVariable String email) {
+        log.info("Received request to search user by email: {}", email);
+
         List<UserResponse> responses = userService.searchByEmail(email)
                 .stream()
                 .map(userMapper::mapResponse)
                 .toList();
+
+        log.info("Search completed for email: {}. Results found: {}", email, responses.size());
+
         return ResponseEntity.ok(responses);
     }
 
@@ -206,9 +221,14 @@ public class UserController {
         )
     })
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest request) {
+        log.info("Received request to create user with email: {}", request.getEmail());
+
         UserRequestDTO requestDTO = userMapper.mapRequest(request);
         UserResponseDTO responseDTO = userService.createUser(requestDTO);
         UserResponse response = userMapper.mapResponse(responseDTO);
+
+        log.info("User successfully created with email: {}", response.getEmail());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -247,9 +267,14 @@ public class UserController {
         )
     })
     public ResponseEntity<UserResponse> updateUser(@PathVariable String email, @RequestBody @Valid UserRequest request) {
+        log.info("Received request to update user with email: {}", email);
+
         UserRequestDTO requestDTO = userMapper.mapRequest(request);
         UserResponseDTO responseDTO = userService.updateUser(email, requestDTO);
         UserResponse response = userMapper.mapResponse(responseDTO);
+
+        log.info("User successfully updated with email: {}", email);
+
         return ResponseEntity.ok(response);
     }
 
@@ -284,8 +309,13 @@ public class UserController {
         )
     })
     public ResponseEntity<UserResponse> deleteUser(@PathVariable String email) {
+        log.info("Received request to delete user with email: {}", email);
+
         UserResponseDTO responseDTO = userService.deleteByEmail(email);
         UserResponse response = userMapper.mapResponse(responseDTO);
+
+        log.info("User successfully deleted with email: {}", email);
+
         return ResponseEntity.ok(response);
     }
 }

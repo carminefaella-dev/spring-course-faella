@@ -3,6 +3,7 @@ package com.example.spring_course.controller.advice;
 import com.example.spring_course.controller.advice.model.ApiErrorResponse;
 import com.example.spring_course.exception.AppException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,18 @@ import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(AppException.class)
     public ResponseEntity<ApiErrorResponse> handleAppException(AppException e, HttpServletRequest request) {
+        log.warn(
+                "Application exception occurred. Status: {}, Message: {}, Path: {}",
+                e.getStatus().value(),
+                e.getMessage(),
+                request.getRequestURI()
+        );
+
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse();
 
         apiErrorResponse.setTimestamp(LocalDateTime.now());
@@ -41,6 +50,8 @@ public class GlobalExceptionHandler {
                 )
                 .collect(Collectors.joining(","));
 
+        log.warn("Validation failed. Path: {}, Errors: {}", request.getRequestURI(), message);
+
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse();
 
         apiErrorResponse.setTimestamp(LocalDateTime.now());
@@ -54,6 +65,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGenericException(Exception e, HttpServletRequest request) {
+        log.error("Unexpected error occurred while processing request. Path: {}", request.getRequestURI(), e);
+
         ApiErrorResponse apiErrorResponse = new ApiErrorResponse();
 
         apiErrorResponse.setTimestamp(LocalDateTime.now());
