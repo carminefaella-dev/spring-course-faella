@@ -1,0 +1,262 @@
+openapi: 3.0.3
+
+info:
+  title: User Management API
+  description: REST API for managing users.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local Development Server
+
+tags:
+  - name: User Management
+    description: APIs for managing users, including creation, retrieval, update and deletion operations.
+
+paths:
+
+  /getAllUser:
+    get:
+      tags:
+        - User Management
+      summary: Retrieve all users
+      description: Returns the complete list of users registered in the system.
+      responses:
+        '200':
+          description: Users successfully retrieved
+          content:
+            application/json:
+              example:
+                - firstName: Mario
+                  lastName: Rossi
+                  username: mrossi
+                  email: mario.rossi@example.com
+        '500':
+          description: Internal server error
+
+  /getUserByName/{firstName}:
+    get:
+      tags:
+        - User Management
+      summary: Retrieve users by first name
+      description: Returns all users whose first name matches the provided value.
+      parameters:
+        - name: firstName
+          in: path
+          required: true
+          schema:
+            type: string
+          example: Mario
+      responses:
+        '200':
+          description: Users successfully retrieved
+          content:
+            application/json:
+              example:
+                - firstName: Mario
+                  lastName: Rossi
+                  username: mrossi
+                  email: mario.rossi@example.com
+        '404':
+          description: No users found for the specified first name
+
+  /getUserByEmail/{email}:
+    get:
+      tags:
+        - User Management
+      summary: Retrieve user by email
+      description: Returns the user associated with the specified email address.
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+          example: mario.rossi@example.com
+      responses:
+        '200':
+          description: User successfully retrieved
+          content:
+            application/json:
+              example:
+                - firstName: Mario
+                  lastName: Rossi
+                  username: mrossi
+                  email: mario.rossi@example.com
+        '404':
+          description: User not found
+
+  /createUser:
+    post:
+      tags:
+        - User Management
+      summary: Create user
+      description: Creates a new user in the system using the provided information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid request data
+        '409':
+          description: A user with the provided email already exists
+
+  /updateUser/{email}:
+    put:
+      tags:
+        - User Management
+      summary: Update user
+      description: Updates the information of an existing user identified by the provided email address.
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+          example: mario.rossi@example.com
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: User successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid request data
+        '404':
+          description: User not found
+
+  /deleteUser/{email}:
+    delete:
+      tags:
+        - User Management
+      summary: Delete user
+      description: Deletes an existing user identified by the specified email address.
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+          example: mario.rossi@example.com
+      responses:
+        '200':
+          description: User successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: User not found
+
+components:
+
+  schemas:
+
+    UserRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - username
+        - email
+        - address
+      properties:
+        firstName:
+          type: string
+          description: User's first name.
+          example: Mario
+
+        lastName:
+          type: string
+          description: User's last name.
+          example: Rossi
+
+        username:
+          type: string
+          description: Unique username used to identify the user.
+          example: mrossi
+
+        email:
+          type: string
+          format: email
+          description: User's email address.
+          example: mario.rossi@example.com
+
+        address:
+          $ref: '#/components/schemas/UserAddress'
+
+    UserAddress:
+      type: object
+      required:
+        - city
+        - streetName
+        - streetNumber
+        - postalCode
+        - province
+        - country
+      properties:
+        city:
+          type: string
+          description: City name.
+          example: Milan
+
+        streetName:
+          type: string
+          description: Street name.
+          example: Via Roma
+
+        streetNumber:
+          type: string
+          description: Street number.
+          example: "25"
+
+        postalCode:
+          type: string
+          description: Postal code.
+          example: "20100"
+
+        province:
+          type: string
+          description: Province code consisting of two uppercase letters.
+          example: MI
+
+        country:
+          type: string
+          description: Country name.
+          example: Italy
+
+    UserResponse:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Mario
+
+        lastName:
+          type: string
+          example: Rossi
+
+        username:
+          type: string
+          example: mrossi
+
+        email:
+          type: string
+          format: email
+          example: mario.rossi@example.com
