@@ -3,8 +3,6 @@ package com.example.spring_course.controller;
 import com.example.spring_course.controller.model.request.UserRequest;
 import com.example.spring_course.controller.model.response.UserResponse;
 import com.example.spring_course.service.UserService;
-import com.example.spring_course.service.dto.UserRequestDTO;
-import com.example.spring_course.service.dto.UserResponseDTO;
 import com.example.spring_course.service.mapper.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -223,9 +221,7 @@ public class UserController {
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest request) {
         log.info("Received request to create user with email: {}", request.getEmail());
 
-        UserRequestDTO requestDTO = userMapper.mapRequest(request);
-        UserResponseDTO responseDTO = userService.createUser(requestDTO);
-        UserResponse response = userMapper.mapResponse(responseDTO);
+        UserResponse response = userMapper.mapResponse(userService.createUser(userMapper.mapRequest(request)));
 
         log.info("User successfully created with email: {}", response.getEmail());
 
@@ -269,9 +265,7 @@ public class UserController {
     public ResponseEntity<UserResponse> updateUser(@PathVariable String email, @RequestBody @Valid UserRequest request) {
         log.info("Received request to update user with email: {}", email);
 
-        UserRequestDTO requestDTO = userMapper.mapRequest(request);
-        UserResponseDTO responseDTO = userService.updateUser(email, requestDTO);
-        UserResponse response = userMapper.mapResponse(responseDTO);
+        UserResponse response = userMapper.mapResponse(userService.updateUser(email, userMapper.mapRequest(request)));
 
         log.info("User successfully updated with email: {}", email);
 
@@ -311,8 +305,7 @@ public class UserController {
     public ResponseEntity<UserResponse> deleteUser(@PathVariable String email) {
         log.info("Received request to delete user with email: {}", email);
 
-        UserResponseDTO responseDTO = userService.deleteByEmail(email);
-        UserResponse response = userMapper.mapResponse(responseDTO);
+        UserResponse response = userMapper.mapResponse(userService.deleteByEmail(email));
 
         log.info("User successfully deleted with email: {}", email);
 
