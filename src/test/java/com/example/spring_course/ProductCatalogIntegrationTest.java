@@ -2,7 +2,7 @@ package com.example.spring_course;
 
 import com.example.spring_course.repository.ProductMongoRepository;
 import com.example.spring_course.repository.model.ProductDocument;
-import com.example.spring_course.service.dto.ProductRequest;
+import com.example.spring_course.controller.model.request.ProductMongoRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class ProductCatalogIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void testCreateProduct() {
-        ProductRequest request = new ProductRequest(
+        ProductMongoRequest request = new ProductMongoRequest(
                 "Lenovo ThinkPad",
                 "Notebook professionale",
                 new BigDecimal("1299.99"),

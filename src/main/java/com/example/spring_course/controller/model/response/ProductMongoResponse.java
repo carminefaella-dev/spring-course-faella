@@ -1,10 +1,10 @@
-package com.example.spring_course.service.dto;
+package com.example.spring_course.controller.model.response;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Map;
 
-public record ProductResponse(
+public record ProductMongoResponse(
         String id,
         String name,
         String description,

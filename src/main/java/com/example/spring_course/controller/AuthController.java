@@ -4,7 +4,7 @@ import com.example.spring_course.controller.model.request.LoginRequest;
 import com.example.spring_course.controller.model.response.TokenResponse;
 import com.example.spring_course.service.RegistrationService;
 import com.example.spring_course.service.TokenService;
-import com.example.spring_course.service.dto.RegisterRequest;
+import com.example.spring_course.controller.model.request.RegisterRequest;
 import com.example.spring_course.service.dto.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

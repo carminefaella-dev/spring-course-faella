@@ -1,11 +1,10 @@
-package com.example.spring_course.service.dto;
+package com.example.spring_course.controller.model.request;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 public record ProductRequest(
         @NotBlank
@@ -20,8 +19,5 @@ public record ProductRequest(
         @NotBlank
         String category,
 
-        String brand,
-
-        Map<String, Object> technicalDetails
-) {
-}
+        String brand
+) {}

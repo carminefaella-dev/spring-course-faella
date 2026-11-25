@@ -3,14 +3,13 @@ package com.example.spring_course.service;
 import com.example.spring_course.exception.AppException;
 import com.example.spring_course.repository.UserAccountRepository;
 import com.example.spring_course.repository.model.UserAccount;
-import com.example.spring_course.service.dto.RegisterRequest;
+import com.example.spring_course.controller.model.request.RegisterRequest;
 import com.example.spring_course.service.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor

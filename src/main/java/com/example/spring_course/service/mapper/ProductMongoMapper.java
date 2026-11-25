@@ -1,15 +1,15 @@
 package com.example.spring_course.service.mapper;
 
 import com.example.spring_course.repository.model.ProductDocument;
-import com.example.spring_course.service.dto.ProductRequest;
-import com.example.spring_course.service.dto.ProductResponse;
+import com.example.spring_course.controller.model.request.ProductMongoRequest;
+import com.example.spring_course.controller.model.response.ProductMongoResponse;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
 @Component
 public class ProductMongoMapper {
-    public ProductDocument toDocument(ProductRequest request) {
+    public ProductDocument toDocument(ProductMongoRequest request) {
         ProductDocument document = new ProductDocument();
 
         document.setName(request.name());
@@ -24,8 +24,8 @@ public class ProductMongoMapper {
     }
 
 
-    public ProductResponse toResponse(ProductDocument document) {
-        return new ProductResponse(
+    public ProductMongoResponse toResponse(ProductDocument document) {
+        return new ProductMongoResponse(
                 document.getId(),
                 document.getName(),
                 document.getDescription(),

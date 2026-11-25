@@ -1,4 +1,4 @@
-package com.example.spring_course.service.dto;
+package com.example.spring_course.controller.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
